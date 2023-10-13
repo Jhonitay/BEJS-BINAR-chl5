@@ -12,7 +12,15 @@ contoh User Controller
     GET http://localhost:4000/api/v1/users
 
     GET http://localhost:4000/api/v1/users/1
-    
+
+    PATCH http://localhost:4000/api/v1/users/1
+    {
+        "name":"maling",
+        "email":"jhon wick",
+        "password":"abogoboga"
+    }
+
+
 
 contoh Account Controller
     POST http://localhost:4000/api/v1/accounts

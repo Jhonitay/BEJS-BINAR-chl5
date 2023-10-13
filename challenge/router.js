@@ -13,6 +13,8 @@ router.get('/',(req,res)=>{
 router.post('/users', userController.registerUser)
 router.get('/users', userController.getUsers)
 router.get('/users/:userId', userController.getUserDetails)
+router.patch('/users/:userId', userController.updateUser)
+router.delete('/users/:userId', userController.deleteUser)
 
 router.post('/accounts', accountControllers.addAccount)
 router.get('/accounts', accountControllers.getAccount)

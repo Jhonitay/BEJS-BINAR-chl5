@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { TransactionAccount } = require("./transactionController");
 const prisma = new PrismaClient();
 
 module.exports = {
@@ -22,7 +23,6 @@ module.exports = {
     });
   },
 
-
   getUsers: async (req, res) => {
     try {
       // Query all users from the database
@@ -33,9 +33,9 @@ module.exports = {
         data: users,
       });
     } catch (error) {
-      console.error('Error retrieving users:', error);
+      console.error("Error retrieving users:", error);
       return res.status(500).json({
-        error: 'Internal Server Error',
+        error: "Internal Server Error",
       });
     }
   },
@@ -61,6 +61,106 @@ module.exports = {
       });
     } catch (error) {
       console.error("Error retrieving user details:", error);
+      return res.status(500).json({
+        error: "Internal Server Error",
+      });
+    }
+  },
+
+  updateUser: async (req, res) => {
+    const userId = parseInt(req.params.userId, 10);
+    const { name, email, password } = req.body;
+
+    try {
+      const updatedUser = await prisma.users.update({
+        where: { id: userId },
+        data: { name, email, password },
+      });
+
+      return res.json({
+        data: updatedUser,
+      });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return res.status(500).json({
+        error: "Internal Server Error",
+      });
+    }
+  },
+
+  deleteUser: async (req, res) => {
+    const userId = parseInt(req.params.userId, 10);
+
+    try {
+      const account = await prisma.bank_accounts.findMany({
+        where: {
+          user_id: userId,
+        },
+      });
+
+      // delete Transaction
+      if (account) {
+        const getAccountId = account.map((account) => {
+          return {
+            id: account.id,
+          };
+        });
+        //convert object to int
+        const IntGetAccountId = getAccountId.map((obj) => obj.id);
+        const getTransactions = await prisma.bank_account_transactions.findMany(
+          {
+            where: {
+              OR: [
+                {
+                  source_account_id: {
+                    in: IntGetAccountId,
+                  },
+                },
+                {
+                  destination_account_id: {
+                    in: IntGetAccountId,
+                  },
+                },
+              ],
+            },
+          }
+        );
+        if (getTransactions) {
+          const getTransactionsId = getTransactions.map((getTransactions) => {
+            return {
+              id: getTransactions.id,
+            };
+          });
+
+          //convert object to int
+          const IntGetTransactinId = getTransactionsId.map((obj) => obj.id);
+          await prisma.bank_account_transactions.deleteMany({
+            where: {
+              id: {
+                in: IntGetTransactinId,
+              },
+            },
+          });
+        }
+        // delete Bank Account
+        await prisma.bank_accounts.deleteMany({
+          where: { user_id: userId },
+        });
+      }
+      //delete profile
+      await prisma.profile.delete({
+        where: { user_id: userId },
+      });
+      //delete users
+      await prisma.users.delete({
+        where: { id: userId },
+      });
+
+      return res.json({
+        message: "User deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
       return res.status(500).json({
         error: "Internal Server Error",
       });
