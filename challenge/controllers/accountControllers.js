@@ -77,11 +77,11 @@ module.exports = {
   },
 
   getDetailAccount: async (req,res) => {
-    const accountId = parseInt(req.params.accountId, 10);
+    const Id = parseInt(req.params.Id, 10);
     try {
         const bankAccount = await prisma.bank_accounts.findUnique({
             where: {
-              id: accountId,
+              id: Id,
             },
           });
           if (!bankAccount) {
@@ -102,6 +102,88 @@ module.exports = {
         console.error('Error getting account names:', error);
       return res.status(500).json({
         error: 'Internal Server Error',
+      });
+    }
+  },
+
+  updateAccount: async (req, res) => {
+    const Id = parseInt(req.params.Id, 10);
+    const { bank_account_number, balance} = req.body;
+
+    try {
+      const AccountUpdate = await prisma.bank_accounts.update({
+        where: { id: Id },
+        data: { bank_account_number,balance },
+      });
+
+      const serializedAccount = JSON.parse(JSON.stringify(AccountUpdate, (key, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+        ));
+
+      return res.json({
+        message:"update succses",
+        data: serializedAccount,
+      });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return res.status(500).json({
+        error: "Internal Server Error",
+      });
+    }
+  },
+
+  delateAccount: async(req, res) => {
+    const Id = parseInt(req.params.Id, 10);
+    try {
+    if (Id){
+      const getTransactions = await prisma.bank_account_transactions.findMany(
+        {
+          where: {
+            OR: [
+              {
+                source_account_id: Id,
+              },
+              {
+                destination_account_id: Id,
+              },
+            ],
+          },
+        }
+      );
+      if (getTransactions) {
+        const getTransactionsId = getTransactions.map((getTransactions) => {
+          return {
+            id: getTransactions.id,
+          };
+        });
+
+        //convert object to int
+        const IntGetTransactinId = getTransactionsId.map((obj) => obj.id);
+        await prisma.bank_account_transactions.deleteMany({
+          where: {
+            id: {
+              in: IntGetTransactinId,
+            },
+          },
+        });
+      }
+      // delete Bank Account
+      await prisma.bank_accounts.delete({
+        where: { id: Id },
+      });
+      return res.json({
+        message:"delate succses",
+      });
+
+    }else{
+      return res.json({
+        message:"Id not tound",
+      });
+    }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return res.status(500).json({
+        error: "Internal Server Error",
       });
     }
   }

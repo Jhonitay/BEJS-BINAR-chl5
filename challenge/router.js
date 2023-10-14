@@ -18,11 +18,15 @@ router.delete('/users/:userId', userController.deleteUser)
 
 router.post('/accounts', accountControllers.addAccount)
 router.get('/accounts', accountControllers.getAccount)
-router.get('/accounts/:accountId', accountControllers.getDetailAccount)
+router.get('/accounts/:Id', accountControllers.getDetailAccount)
+router.patch('/accounts/:Id', accountControllers.updateAccount)
+router.delete('/accounts/:Id', accountControllers.delateAccount)
 
 router.post('/transactions', transactionController.TransactionAccount)
 router.get('/transactions', transactionController.getTransactions)
-router.get('/transactions/:transactions', transactionController.getDetailTransactions)
+router.get('/transactions/:Id', transactionController.getDetailTransactions)
+router.patch('/transactions/:Id', transactionController.updateTransaction)
+router.delete('/transactions/:Id', transactionController.deleteTransaction)
 
 
 module.exports = router

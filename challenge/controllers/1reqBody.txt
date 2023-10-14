@@ -11,9 +11,11 @@ contoh User Controller
 
     GET http://localhost:4000/api/v1/users
 
-    GET http://localhost:4000/api/v1/users/1
+    GET http://localhost:4000/api/v1/users/:userId
 
-    PATCH http://localhost:4000/api/v1/users/1
+    DELETE http://localhost:4000/api/v1/users/:userId
+
+    PATCH http://localhost:4000/api/v1/users/:userId
     {
         "name":"maling",
         "email":"jhon wick",
@@ -32,7 +34,17 @@ contoh Account Controller
     }
     GET http://localhost:4000/api/v1/accounts
 
-    GET http://localhost:4000/api/v1/accounts/1
+    GET http://localhost:4000/api/v1/accounts/:Id
+
+    DELETE http://localhost:4000/api/v1/accounts/:Id
+
+    PATCH http://localhost:4000/api/v1/accounts/:Id
+    {
+        "bank_account_number":"12020202",
+        "balance":90000
+    }
+
+
 
 
 contoh Transaction Controller
@@ -45,4 +57,12 @@ contoh Transaction Controller
     
     GET http://localhost:4000/api/v1/transactions
 
-    GET http://localhost:4000/api/v1/transactions/1
+    GET http://localhost:4000/api/v1/transactions/:Id
+    
+    PATCH http://localhost:4000/api/v1/transactions/:Id
+    {
+        "amount":1000
+    }
+
+    DELETE http://localhost:4000/api/v1/transactions/:Id
+

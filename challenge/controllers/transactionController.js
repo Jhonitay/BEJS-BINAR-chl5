@@ -102,12 +102,12 @@ module.exports = {
   },
 
   getDetailTransactions: async (req, res) => {
-    const idTransactions = parseInt(req.params.transactions, 10);
+    const Id = parseInt(req.params.Id, 10);
     try {
       // Retrieve the list of transactions
       const transactions = await prisma.bank_account_transactions.findUnique({
         where: {
-            id: idTransactions,
+            id: Id,
           },
         include: {
           source_account: true,
@@ -127,6 +127,89 @@ module.exports = {
       console.error('Error getting transactions:', error);
       return res.status(500).json({
         error: 'Internal Server Error',
+      });
+    }
+  },
+
+  deleteTransaction: async(req,res) => {
+    const transactionsId = parseInt(req.params.Id, 10);
+
+    try {
+      await prisma.bank_account_transactions.delete({
+        where: { id: transactionsId },
+      });
+
+      return res.json({
+        message: "transaction deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      return res.status(500).json({
+        error: "Internal Server Error",
+      });
+    }
+  },
+
+  updateTransaction: async (req, res) => {
+    const Id = parseInt(req.params.Id, 10);
+    const { amount } = req.body;
+
+    try {
+      const updatedTransactoin = await prisma.bank_account_transactions.update({
+        where: { id: Id },
+        data:  {amount},
+      });
+
+      const accountTransactions = await prisma.bank_account_transactions.findUnique({
+        where: {
+          id: Id,
+        },
+      });
+      const source_account = accountTransactions.source_account_id
+      const destination_account = accountTransactions.destination_account_id
+      const sourceAmount = await prisma.bank_accounts.findUnique({
+        where: {
+          id: source_account,
+        },
+      });
+
+      if (sourceAmount.balance < amount) {
+        return res.status(400).json({
+          error: 'Insufficient balance in the source account',
+        });
+      }
+
+      // Perform the transaction
+      await prisma.$transaction([
+        prisma.bank_accounts.update({
+          where: { id: source_account },
+          data: {
+            balance: {
+              decrement: amount,
+            },
+          },
+        }),
+        prisma.bank_accounts.update({
+          where: { id: destination_account },
+          data: {
+            balance: {
+              increment: amount,
+            },
+          },
+        }),
+      ]);
+
+      const serializedTransactions = JSON.parse(JSON.stringify(updatedTransactoin, (key, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+        ));
+
+      return res.json({
+        data: serializedTransactions,
+      });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return res.status(500).json({
+        error: "Internal Server Error",
       });
     }
   },
