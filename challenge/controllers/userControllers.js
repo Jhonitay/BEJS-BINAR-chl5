@@ -1,5 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 const { TransactionAccount } = require("./transactionController");
+const bcrypt = require ('bcrypt');
+const jwt = require ('jsonwebtoken');
+const cryptPassword = async (password)=>{
+  const salt = await bcrypt.genSalt(5);
+
+  return bcrypt.hash(password, salt)
+}
 const prisma = new PrismaClient();
 
 module.exports = {
@@ -8,7 +15,7 @@ module.exports = {
       data: {
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: await cryptPassword(req.body.password),
         profile: {
           create: {
             identity_number: req.body.identity_number,
@@ -166,4 +173,44 @@ module.exports = {
       });
     }
   },
+
+  loginUser: async(req,res)=>{
+    const findUser = await prisma.users.findFirst({
+      where:{
+        email: req.body.email
+      }
+    })
+    if(!findUser){
+      return res.status(404).json({
+        error: 'User Not Exists'
+      });
+    }
+    if(bcrypt.compareSync(req.body.password, findUser.password)){
+      const token = jwt.sign({id:findUser.id},'secret_key',
+      {expiresIn: '6h'})
+
+      return res.status(200).json({
+        data:{
+          token
+        }
+      })
+    }
+
+    return res.status(403).json({
+      error:'invalid password'
+    })
+
+  },
+
+  getProfile: async(req, res) => {
+    const users = await prisma.users.findUnique({
+        where: {
+            id: res.user.id
+        }
+    })
+
+    return res.status(200).json({
+        data: users
+    })
+}
 };

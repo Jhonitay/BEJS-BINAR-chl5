@@ -3,6 +3,7 @@ const router = express.Router()
 const userController = require('./controllers/userControllers')
 const accountControllers = require('./controllers/accountControllers')
 const transactionController = require('./controllers/transactionController')
+const checkToken = require('./middleware/checkToken')
 
 router.get('/',(req,res)=>{
     return res.json({
@@ -15,6 +16,9 @@ router.get('/users', userController.getUsers)
 router.get('/users/:userId', userController.getUserDetails)
 router.patch('/users/:userId', userController.updateUser)
 router.delete('/users/:userId', userController.deleteUser)
+router.post('/users/login', userController.loginUser)
+router.post('/users/auth/authenticate', checkToken, userController.getProfile)
+
 
 router.post('/accounts', accountControllers.addAccount)
 router.get('/accounts', accountControllers.getAccount)
