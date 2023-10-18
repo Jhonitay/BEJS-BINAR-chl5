@@ -78,7 +78,7 @@ module.exports = {
       const bankAccount = await prisma.bank_accounts.findUnique({
         where: {
           id: Id,
-        },
+        }
       });
       if (!bankAccount) {
         return res.status(404).json({
@@ -140,7 +140,14 @@ module.exports = {
   delateAccount: async (req, res) => {
     const Id = parseInt(req.params.Id, 10);
     try {
-      if (Id) {
+      // check Id bankAccount
+      const bank = await prisma.bank_accounts.findUnique({
+        where:{
+          id:Id
+        }
+      })
+      
+      if (bank) {
         const getTransactions = await prisma.bank_account_transactions.findMany(
           {
             where: {

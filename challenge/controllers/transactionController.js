@@ -25,15 +25,15 @@ module.exports = {
       }
 
       if (source_account_id === destination_account_id) {
-        return res.status(404).json({
-          error: 'cannot perform transactions to the same account',
+        return res.status(403).json({
+          error: "cannot perform transactions to the same account",
         });
       }
 
       // Check if source account has sufficient balance
       if (sourceAccount.balance < amount) {
-        return res.status(400).json({
-          error: 'Insufficient balance in the source account',
+        return res.status(403).json({
+          error: "Insufficient balance in the source account",
         });
       }
 
@@ -64,7 +64,7 @@ module.exports = {
         }),
       ]);
 
-      return res.json({
+      return res.status(200).json({
         message: 'Transaction successful',
       });
     } catch (error) {
@@ -120,7 +120,7 @@ module.exports = {
         ));
 
       // Return the list of transactions in the response
-      return res.json({
+      return res.status(200).json({
         data: serializedTransactions,
       });
     } catch (error) {
@@ -135,6 +135,16 @@ module.exports = {
     const transactionsId = parseInt(req.params.Id, 10);
 
     try {
+      const transaction = await prisma.bank_account_transactions.findUnique({
+        where:{
+          id : transactionsId
+        }
+      })
+      if(!transaction){
+        return res.status(404).json({
+          message : "id transaction not found"
+        })
+      }
       await prisma.bank_account_transactions.delete({
         where: { id: transactionsId },
       });

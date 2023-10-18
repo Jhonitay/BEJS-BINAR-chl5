@@ -294,7 +294,7 @@
         }
       }
     },
-    "api/v1/users/login":{
+    "api/v1/users/login": {
       "post": {
         "tags": [
           "user"
@@ -330,7 +330,7 @@
                       "properties": {
                         "token": {
                           "type": "string",
-                          "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
                         }
                       }
                     }
@@ -351,7 +351,7 @@
         }
       }
     },
-    "api/v1/users/auth/authenticate":{
+    "api/v1/users/auth/authenticate": {
       "post": {
         "tags": [
           "user"
@@ -381,19 +381,19 @@
                       "properties": {
                         "id": {
                           "type": "number",
-                          "example":"1"
+                          "example": "1"
                         },
                         "name": {
                           "type": "string",
-                          "example":"jhondoe"
+                          "example": "jhondoe"
                         },
                         "email": {
                           "type": "string",
-                          "example":"blalala@gmail"
+                          "example": "blalala@gmail"
                         },
                         "password": {
                           "type": "string",
-                          "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
                         }
                       }
                     }
@@ -411,13 +411,13 @@
         }
       }
     },
-    "api/v1/accounts":{
+    "api/v1/accounts": {
       "post": {
         "tags": [
           "account"
         ],
         "summary": "Create Account",
-        "requestBody":{
+        "requestBody": {
           "content": {
             "application/json": {
               "schema": {
@@ -453,23 +453,23 @@
                       "properties": {
                         "id": {
                           "type": "number",
-                          "example":"1"
+                          "example": "1"
                         },
                         "bank_name": {
                           "type": "string",
-                          "example":"BRI"
+                          "example": "BRI"
                         },
                         "bank_account_number": {
                           "type": "string",
-                          "example":"2393939093"
+                          "example": "2393939093"
                         },
                         "balance": {
                           "type": "number",
-                          "example":"9000000"
+                          "example": "9000000"
                         },
                         "user_id": {
                           "type": "number",
-                          "example":"1"
+                          "example": "1"
                         }
                       }
                     }
@@ -485,7 +485,8 @@
             "description": "Internal Server Error"
           }
         }
-      },"get": {
+      },
+      "get": {
         "tags": [
           "account"
         ],
@@ -505,11 +506,11 @@
                         "properties": {
                           "bank_name": {
                             "type": "string",
-                            "example":"BRI"
+                            "example": "BRI"
                           },
                           "bank_account_number": {
                             "type": "string",
-                            "example":"2393939093"
+                            "example": "2393939093"
                           }
                         }
                       }
@@ -525,7 +526,7 @@
         }
       }
     },
-    "api/v1/accounts/{Id}":{
+    "api/v1/accounts/{Id}": {
       "get": {
         "tags": [
           "account"
@@ -557,23 +558,23 @@
                         "properties": {
                           "id": {
                             "type": "number",
-                            "example":"1"
+                            "example": "1"
                           },
                           "bank_name": {
                             "type": "string",
-                            "example":"BRI"
+                            "example": "BRI"
                           },
                           "bank_account_number": {
                             "type": "string",
-                            "example":"2393939093"
+                            "example": "2393939093"
                           },
                           "balance": {
                             "type": "number",
-                            "example":"9000000"
+                            "example": "9000000"
                           },
                           "user_id": {
                             "type": "number",
-                            "example":"1"
+                            "example": "1"
                           }
                         }
                       }
@@ -607,7 +608,7 @@
             }
           }
         ],
-        "requestBody":{
+        "requestBody": {
           "content": {
             "application/json": {
               "schema": {
@@ -637,23 +638,23 @@
                       "properties": {
                         "id": {
                           "type": "number",
-                          "example":"1"
+                          "example": "1"
                         },
                         "bank_name": {
                           "type": "string",
-                          "example":"BRI"
+                          "example": "BRI"
                         },
                         "bank_account_number": {
                           "type": "string",
-                          "example":"2393939093"
+                          "example": "2393939093"
                         },
                         "balance": {
                           "type": "number",
-                          "example":"9000000"
+                          "example": "9000000"
                         },
                         "user_id": {
                           "type": "number",
-                          "example":"1"
+                          "example": "1"
                         }
                       }
                     }
@@ -692,6 +693,251 @@
           },
           "404": {
             "description": "id Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "api/v1/transactions": {
+      "post": {
+        "tags": [
+          "transaction"
+        ],
+        "summary": "create transactions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "source_account_id": {
+                    "type": "number"
+                  },
+                  "destination_account_id": {
+                    "type": "number"
+                  },
+                  "amount": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "transaction succsesful"
+          },
+          "404": {
+            "description": "Source or destination account not found"
+          },
+          "403": {
+            "description": "cannot perform transactions to the same account"
+          },
+          "": {
+            "description": "Insufficient balance in the source account"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "transaction"
+        ],
+        "summary": "create transactions",
+        "responses": {
+          "200": {
+            "description": "transaction succsesful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "source_account_id": {
+                            "type": "number"
+                          },
+                          "destination_account_id": {
+                            "type": "number"
+                          },
+                          "amount": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "api/v1/transactions/{id}": {
+      "get": {
+        "tags": [
+          "transaction"
+        ],
+        "summary": "Get Detail Transactions",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "input a transaction id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "source_account_id": {
+                          "type": "number"
+                        },
+                        "destination_account_id": {
+                          "type": "number"
+                        },
+                        "amount": {
+                          "type": "number"
+                        },
+                        "source_account": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "number"
+                            },
+                            "bank_name": {
+                              "type": "string"
+                            },
+                            "bank_account_number": {
+                              "type": "string"
+                            },
+                            "balance": {
+                              "type": "number"
+                            },
+                            "user_id": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "destination_account": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "number"
+                            },
+                            "bank_name": {
+                              "type": "string"
+                            },
+                            "bank_account_number": {
+                              "type": "string"
+                            },
+                            "balance": {
+                              "type": "number"
+                            },
+                            "user_id": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "transaction"
+        ],
+        "summary": "Delete transaction",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "input Id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "transaction deleted successfully"
+          },
+          "404": {
+            "description": "id transaction not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "transaction"
+        ],
+        "summary": "update transaction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "input Id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "transaction updated successfully"
+          },
+          "404": {
+            "description": "id transaction not found"
           },
           "500": {
             "description": "Internal Server Error"
