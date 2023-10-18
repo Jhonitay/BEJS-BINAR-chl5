@@ -1,33 +1,42 @@
-const { PrismaClient } = require("@prisma/client");
-const { TransactionAccount } = require("./transactionController");
-const bcrypt = require ('bcrypt');
-const jwt = require ('jsonwebtoken');
-const cryptPassword = async (password)=>{
+const { PrismaClient, Prisma } = require("@prisma/client");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const cryptPassword = async (password) => {
   const salt = await bcrypt.genSalt(5);
 
-  return bcrypt.hash(password, salt)
-}
+  return bcrypt.hash(password, salt);
+};
 const prisma = new PrismaClient();
 
 module.exports = {
   registerUser: async (req, res) => {
-    const user = await prisma.users.create({
-      data: {
-        name: req.body.name,
-        email: req.body.email,
-        password: await cryptPassword(req.body.password),
-        profile: {
-          create: {
-            identity_number: req.body.identity_number,
-            identity_type: req.body.identity_type,
-            address: req.body.address,
+    try {
+      const user = await prisma.users.create({
+        data: {
+          name: req.body.name,
+          email: req.body.email,
+          password: await cryptPassword(req.body.password),
+          profile: {
+            create: {
+              identity_number: req.body.identity_number,
+              identity_type: req.body.identity_type,
+              address: req.body.address,
+            },
           },
         },
-      },
-    });
-    return res.json({
-      data: user,
-    });
+      });
+      return res.status(201).json({
+        message: "succsess create user",
+        data: user,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({
+        error: error.name,
+        message: error.message,
+      });
+    }
   },
 
   getUsers: async (req, res) => {
@@ -99,6 +108,16 @@ module.exports = {
     const userId = parseInt(req.params.userId, 10);
 
     try {
+      const user = await prisma.users.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+      if (!user) {
+        return res.status(404).json({
+          message: "user id not found",
+        });
+      }
       const account = await prisma.bank_accounts.findMany({
         where: {
           user_id: userId,
@@ -163,7 +182,7 @@ module.exports = {
         where: { id: userId },
       });
 
-      return res.json({
+      return res.status(200).json({
         message: "User deleted successfully",
       });
     } catch (error) {
@@ -174,43 +193,57 @@ module.exports = {
     }
   },
 
-  loginUser: async(req,res)=>{
-    const findUser = await prisma.users.findFirst({
-      where:{
-        email: req.body.email
+  loginUser: async (req, res) => {
+    try {
+      const findUser = await prisma.users.findFirst({
+        where: {
+          email: req.body.email,
+        },
+      });
+      if (!findUser) {
+        return res.status(404).json({
+          error: "User Not Exists",
+        });
       }
-    })
-    if(!findUser){
-      return res.status(404).json({
-        error: 'User Not Exists'
+      if (bcrypt.compareSync(req.body.password, findUser.password)) {
+        const token = jwt.sign({ id: findUser.id }, "secret_key", {
+          expiresIn: "6h",
+        });
+
+        return res.status(200).json({
+          data: {
+            token,
+          },
+        });
+      }
+
+      return res.status(403).json({
+        error: "invalid password",
+      });
+    } catch (error) {
+      console.error(error)
+      return res.status(403).json({
+        error: "internal server error",
       });
     }
-    if(bcrypt.compareSync(req.body.password, findUser.password)){
-      const token = jwt.sign({id:findUser.id},'secret_key',
-      {expiresIn: '6h'})
-
-      return res.status(200).json({
-        data:{
-          token
-        }
-      })
-    }
-
-    return res.status(403).json({
-      error:'invalid password'
-    })
-
   },
 
-  getProfile: async(req, res) => {
-    const users = await prisma.users.findUnique({
+  getProfile: async (req, res) => {
+    try {
+      const users = await prisma.users.findUnique({
         where: {
-            id: res.user.id
-        }
-    })
-
-    return res.status(200).json({
-        data: users
-    })
-}
+          id: res.user.id,
+        },
+      });
+  
+      return res.status(200).json({
+        data: users,
+      });
+    } catch (error) {
+      console.error(error)
+      return res.status(403).json({
+        error: "internal server error",
+      });
+    }
+  },
 };

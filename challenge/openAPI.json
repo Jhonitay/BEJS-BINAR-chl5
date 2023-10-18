@@ -1,78 +1,121 @@
 {
-    "openapi": "3.0.3",
-    "info": {
-      "title": "BE JS 2 Documentation API",
-      "version": "1.0.11"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "BE JS 2 Documentation API",
+    "version": "1.0.11"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "https://petstore3.swagger.io/api/v3"
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "User API"
     },
-    "externalDocs": {
-      "description": "Find out more about Swagger",
-      "url": "http://swagger.io"
+    {
+      "name": "account",
+      "description": "User API"
     },
-    "servers": [
-      {
-        "url": "https://petstore3.swagger.io/api/v3"
-      }
-    ],
-    "tags": [
-      {
-        "name": "user",
-        "description": "User API"
-      },
-      {
-        "name": "account",
-        "description": "User API"
-      },
-      {
-        "name": "transaction",
-        "description": "User API"
-      }
-    ],
-    "paths": {
-      "/api/v1/users": {
-        "post": {
-          "tags": [
-            "user"
-          ],
-          "requestBody": {
+    {
+      "name": "transaction",
+      "description": "User API"
+    }
+  ],
+  "paths": {
+    "/api/v1/users": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Register User",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "identity_number": {
+                    "type": "integer"
+                  },
+                  "identity_type": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "succsess",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "password": {
-                      "type": "string"
-                    },
-                    "identity_number": {
-                      "type": "integer"
-                    },
-                    "identity_type": {
-                      "type": "string"
-                    },
-                    "address": {
-                      "type": "string"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        }
+                      }
                     }
                   }
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Success",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "data": {
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get List of Users",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
                           "name": {
                             "type": "string"
                           },
@@ -89,62 +132,572 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        },
-            "get": {
-                "tags": [
-                    "user"
-                  ],
-              "summary": "Get List of Users",
-              "responses": {
-                "200": {
-                  "description": "Successful response",
-                  "content":{
-                  "application/json": {
-                  "schema": {
-                
-                    "type": "object",
-                    "properties": {
-                      "data": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties":{
-                            "id":{
-                                "type":"integer"
-                            },
-                            "name":{
-                                "type":"string"
-                            },
-                            "email":{
-                                "type":"string"
-                            },
-                            "password":{
-                                "type":"string"
-                            }
-
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
+        }
+      }
+    },
+    "/api/v1/users/{userId}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get Detail User",
+        "description": "Find Single User by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "input a userId",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
-            },
-                "500": {
-                  "description": "Internal Server Error",
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error": {
-                        "type": "string",
-                        "example": "Internal Server Error"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "jhondoe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "jhon@duar.com"
+                        },
+                        "password": {
+                          "type": "string",
+                          "example": "skdhfjd"
+                        }
                       }
                     }
                   }
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "update User",
+        "description": "updtae User by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "input a userId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "jhondoe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "jhon@duar.com"
+                        },
+                        "password": {
+                          "type": "string",
+                          "example": "skdhfjd"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "delete User",
+        "description": "delete User by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "input a userId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "user id not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "api/v1/users/login":{
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Login User",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Exists"
+          },
+          "403": {
+            "description": "invalid password"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "api/v1/users/auth/authenticate":{
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "get profile User",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "token after login",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example":"1"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example":"jhondoe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example":"blalala@gmail"
+                        },
+                        "password": {
+                          "type": "string",
+                          "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "unauthenticated"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "api/v1/accounts":{
+      "post": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Create Account",
+        "requestBody":{
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "number"
+                  },
+                  "bank_name": {
+                    "type": "string"
+                  },
+                  "bank_account_number": {
+                    "type": "string"
+                  },
+                  "balance": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example":"1"
+                        },
+                        "bank_name": {
+                          "type": "string",
+                          "example":"BRI"
+                        },
+                        "bank_account_number": {
+                          "type": "string",
+                          "example":"2393939093"
+                        },
+                        "balance": {
+                          "type": "number",
+                          "example":"9000000"
+                        },
+                        "user_id": {
+                          "type": "number",
+                          "example":"1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },"get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Get List of Account",
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "bank_name": {
+                            "type": "string",
+                            "example":"BRI"
+                          },
+                          "bank_account_number": {
+                            "type": "string",
+                            "example":"2393939093"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "api/v1/accounts/{Id}":{
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Get single detail account",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "input a userId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number",
+                            "example":"1"
+                          },
+                          "bank_name": {
+                            "type": "string",
+                            "example":"BRI"
+                          },
+                          "bank_account_number": {
+                            "type": "string",
+                            "example":"2393939093"
+                          },
+                          "balance": {
+                            "type": "number",
+                            "example":"9000000"
+                          },
+                          "user_id": {
+                            "type": "number",
+                            "example":"1"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "account not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "account"
+        ],
+        "summary": "update Account",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "input a userId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody":{
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bank_account_number": {
+                    "type": "number"
+                  },
+                  "balance": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "update succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example":"1"
+                        },
+                        "bank_name": {
+                          "type": "string",
+                          "example":"BRI"
+                        },
+                        "bank_account_number": {
+                          "type": "string",
+                          "example":"2393939093"
+                        },
+                        "balance": {
+                          "type": "number",
+                          "example":"9000000"
+                        },
+                        "user_id": {
+                          "type": "number",
+                          "example":"1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "id Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Delete Account",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "input a userId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete succsess"
+          },
+          "404": {
+            "description": "id Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   }
+}
