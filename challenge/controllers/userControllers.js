@@ -1,13 +1,8 @@
-const { PrismaClient, Prisma } = require("@prisma/client");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-
-const cryptPassword = async (password) => {
-  const salt = await bcrypt.genSalt(5);
-
-  return bcrypt.hash(password, salt);
-};
-const prisma = new PrismaClient();
+const { PrismaClient, Prisma } = require("@prisma/client"),
+  bcrypt = require("bcrypt"),
+  jwt = require("jsonwebtoken"),
+  prisma = new PrismaClient(),
+  utils = require('../utils')
 
 module.exports = {
   registerUser: async (req, res) => {
@@ -16,7 +11,7 @@ module.exports = {
         data: {
           name: req.body.name,
           email: req.body.email,
-          password: await cryptPassword(req.body.password),
+          password: await utils.cryptPassword(req.body.password),
           profile: {
             create: {
               identity_number: req.body.identity_number,

@@ -20,11 +20,11 @@
     },
     {
       "name": "account",
-      "description": "User API"
+      "description": "Account API"
     },
     {
       "name": "transaction",
-      "description": "User API"
+      "description": "transaction API"
     }
   ],
   "paths": {
@@ -874,34 +874,6 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "transaction"
-        ],
-        "summary": "Delete transaction",
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "path",
-            "description": "input Id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "transaction deleted successfully"
-          },
-          "404": {
-            "description": "id transaction not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "patch": {
         "tags": [
           "transaction"
@@ -935,6 +907,34 @@
         "responses": {
           "200": {
             "description": "transaction updated successfully"
+          },
+          "404": {
+            "description": "id transaction not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "transaction"
+        ],
+        "summary": "Delete transaction",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "input Id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "transaction deleted successfully"
           },
           "404": {
             "description": "id transaction not found"
