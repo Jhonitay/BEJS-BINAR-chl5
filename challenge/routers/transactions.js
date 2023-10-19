@@ -5,7 +5,7 @@ const express = require('express'),
     validate = require('../middleware/validate'),
     schema = require('../validatorSchemas/transactionValidatorSchema.js')
 
-router.post('/transactions', validate(schema.addTransaction),controller.TransactionAccount)
+router.post('/transactions',checkToken, validate(schema.addTransaction),controller.TransactionAccount)
 router.get('/transactions', controller.getTransactions)
 router.get('/transactions/:Id', controller.getDetailTransactions)
 router.patch('/transactions/:Id', validate(schema.updateTransaction),controller.updateTransaction)

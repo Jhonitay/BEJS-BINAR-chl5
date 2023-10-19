@@ -6,15 +6,31 @@ const prisma = new PrismaClient();
 module.exports = {
   TransactionAccount: async (req, res) => {
     try {
-      const { source_account_id, destination_account_id, amount } = req.body;
+      const {  source_account_number ,destination_account_number, amount } = req.body;
 
+      const checkAccount = await prisma.bank_accounts.findFirst({
+        where : {
+          bank_account_number : source_account_number
+        }
+      })
+      if (checkAccount) {
+        if(checkAccount.user_id != res.user.id){
+          return res.status(409).json({
+            error: 'there is not your account number',
+          });
+        }
+      } else {
+        return res.status(404).json({
+          error: 'account number not found',
+        });
+      }
       // Retrieve source and destination accounts
-      const sourceAccount = await prisma.bank_accounts.findUnique({
-        where: { id: source_account_id },
+      const sourceAccount = await prisma.bank_accounts.findFirst({
+        where: { bank_account_number: source_account_number },
       });
 
-      const destinationAccount = await prisma.bank_accounts.findUnique({
-        where: { id: destination_account_id },
+      const destinationAccount = await prisma.bank_accounts.findFirst({
+        where: { bank_account_number: destination_account_number },
       });
 
       // Check if accounts exist
@@ -24,7 +40,7 @@ module.exports = {
         });
       }
 
-      if (source_account_id === destination_account_id) {
+      if (source_account_number === destination_account_number) {
         return res.status(403).json({
           error: "cannot perform transactions to the same account",
         });
@@ -41,13 +57,13 @@ module.exports = {
       await prisma.$transaction([
         prisma.bank_account_transactions.create({
           data: {
-            source_account_id,
-            destination_account_id,
+            source_account_id:sourceAccount.id,
+            destination_account_id:destinationAccount.id,
             amount,
           },
         }),
         prisma.bank_accounts.update({
-          where: { id: source_account_id },
+          where: { id: sourceAccount.id },
           data: {
             balance: {
               decrement: amount,
@@ -55,7 +71,7 @@ module.exports = {
           },
         }),
         prisma.bank_accounts.update({
-          where: { id: destination_account_id },
+          where: { id: destinationAccount.id },
           data: {
             balance: {
               increment: amount,

@@ -10,8 +10,8 @@ datasource db {
 }
 model users{
   id              Int @id @default(autoincrement()) 
-  name            String
-  email           String
+  name            String    
+  email           String    @unique
   password        String
   profile         profile?
   bank_accounts   bank_accounts[]
@@ -19,7 +19,7 @@ model users{
 model profile{
   id              Int       @id @default(autoincrement())
   identity_type   String 
-  identity_number String
+  identity_number String    @unique
   address         String
   user_id         Int       @unique
   user            users     @relation(fields: [user_id],references: [id])
@@ -28,7 +28,7 @@ model profile{
 model bank_accounts{
   id                        Int     @id @default(autoincrement())
   bank_name                 String
-  bank_account_number       String
+  bank_account_number       String  @unique
   balance                   BigInt
   user_id                   Int     
   user                      users   @relation(fields: [user_id],references: [id])

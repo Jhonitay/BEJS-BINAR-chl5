@@ -1,7 +1,7 @@
 const express = require('express'),
     router = express.Router(),
     controller = require('../controllers/accountControllers'),
-    // checkToken = require('../middleware/checkToken'),
+    checkToken = require('../middleware/checkToken'),
     validate = require('../middleware/validate'),
     schema = require('../validatorSchemas/accountValidatorSchema.js')
 

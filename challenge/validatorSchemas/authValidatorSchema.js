@@ -15,10 +15,8 @@ const login = [
 ]
 
 const changePassword = [
-    body('oldEmail').notEmpty().isEmail(),
-    body('oldPassword').notEmpty(),
-    body('Email').notEmpty().isEmail(),
-    body('Password').notEmpty()
+    body('old_password').notEmpty(),
+    body('new_assword').notEmpty()
 ]
 
 module.exports = {

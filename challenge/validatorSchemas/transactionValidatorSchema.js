@@ -1,8 +1,8 @@
 const {body} = require('express-validator')
 
 const addTransaction = [
-    body('source_account_id').notEmpty().isNumeric(),
-    body('destination_account_id').notEmpty().isNumeric(),
+    body('source_account_number').notEmpty().isNumeric(),
+    body('destination_account_number').notEmpty().isNumeric(),
     body('amount').notEmpty().isNumeric(),
     
 ]

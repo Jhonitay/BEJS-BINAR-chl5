@@ -6,11 +6,11 @@ const express = require('express'),
     checkToken = require('../middleware/checkToken')
 
 router.post('/register',validate(schema.register), controller.registerUser)
+router.post('/login', validate(schema.login),controller.loginUser)
+router.post('/authenticate', checkToken, controller.getProfile)
+router.delete('/users',checkToken, controller.deleteMyUser)
+router.patch('/users', checkToken,validate(schema.changePassword), controller.changePasswordUser)
 router.get('/users', controller.getUsers)
 router.get('/users/:userId', controller.getUserDetails)
-router.patch('/users/:userId', controller.updateUser)
-router.delete('/users/:userId', controller.deleteUser)
-router.post('/users/login', validate(schema.login),controller.loginUser)
-router.post('/authenticate', checkToken, controller.getProfile)
 
 module.exports = router

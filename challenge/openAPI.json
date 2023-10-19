@@ -28,7 +28,7 @@
     }
   ],
   "paths": {
-    "/api/v1/users": {
+    "/api/v1/auth/register": {
       "post": {
         "tags": [
           "user"
@@ -94,207 +94,9 @@
             "description": "bad request"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Get List of Users",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "email": {
-                            "type": "string"
-                          },
-                          "password": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
       }
     },
-    "/api/v1/users/{userId}": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Get Detail User",
-        "description": "Find Single User by ID",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "input a userId",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "succsess",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "example": "jhondoe"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "jhon@duar.com"
-                        },
-                        "password": {
-                          "type": "string",
-                          "example": "skdhfjd"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "user"
-        ],
-        "summary": "update User",
-        "description": "updtae User by ID",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "input a userId",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "succsess",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "example": "jhondoe"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "jhon@duar.com"
-                        },
-                        "password": {
-                          "type": "string",
-                          "example": "skdhfjd"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "user"
-        ],
-        "summary": "delete User",
-        "description": "delete User by ID",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "input a userId",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User deleted successfully"
-          },
-          "404": {
-            "description": "user id not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "api/v1/users/login": {
+    "api/v1/auth/login": {
       "post": {
         "tags": [
           "user"
@@ -351,7 +153,7 @@
         }
       }
     },
-    "api/v1/users/auth/authenticate": {
+    "api/v1/auth/authenticate": {
       "post": {
         "tags": [
           "user"
@@ -361,7 +163,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "token after login",
+            "description": "res token after login",
             "required": false,
             "schema": {
               "type": "string"
@@ -411,7 +213,225 @@
         }
       }
     },
-    "api/v1/accounts": {
+    "api/v1/auth/users":{
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get List of Users",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "password": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "change password user",
+        "description": "change password",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "res token after login",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "old_password": {
+                    "type": "string"
+                  },
+                  "new_password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": "jhondoe"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "jhondoe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "jhon@duar.com"
+                        },
+                        "password": {
+                          "type": "string",
+                          "example": "skdhfjd"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "invalid password"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "delete User",
+        "description": "delete User by ID",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "res token after login",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "user id not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/users/{userId}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get Detail User",
+        "description": "Find Single User by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "input a userId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succsess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "jhondoe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "jhon@duar.com"
+                        },
+                        "password": {
+                          "type": "string",
+                          "example": "skdhfjd"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "api/v1/auth/accounts": {
       "post": {
         "tags": [
           "account"
@@ -526,7 +546,7 @@
         }
       }
     },
-    "api/v1/accounts/{Id}": {
+    "api/v1/auth/accounts/{Id}": {
       "get": {
         "tags": [
           "account"
@@ -700,22 +720,33 @@
         }
       }
     },
-    "api/v1/transactions": {
+    "api/v1/auth/transactions": {
       "post": {
         "tags": [
           "transaction"
         ],
         "summary": "create transactions",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "res token after login",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "source_account_id": {
+                  "source_account_number": {
                     "type": "number"
                   },
-                  "destination_account_id": {
+                  "destination_account_number": {
                     "type": "number"
                   },
                   "amount": {
@@ -738,6 +769,12 @@
           },
           "": {
             "description": "Insufficient balance in the source account"
+          },
+          " ": {
+            "description": "account number not found"
+          },
+          "409": {
+            "description": "wrong account number"
           },
           "500": {
             "description": "Internal Server Error"
@@ -785,7 +822,7 @@
         }
       }
     },
-    "api/v1/transactions/{id}": {
+    "api/v1/auth/transactions/{id}": {
       "get": {
         "tags": [
           "transaction"
